@@ -47,7 +47,7 @@ def scrape_zip_code(zip_code, driver, proxy):
 
     # ensure no server error
     i = 0
-    while "Internal Server Error" or "Rate limit exceeded" in driver.page_source:
+    while ("Internal Server Error" in driver.page_source) or ("Rate limit exceeded" in driver.page_source):
         rand = random.randint(2, 5)
         i += rand
         print("stalled for " + str(i))
