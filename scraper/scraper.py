@@ -38,7 +38,7 @@ def scrape_zip_code(zip_code, driver, proxy):
     }
     print(proxy_url)
     # this sucks but prevents overload
-    rand = random.randint(2,5)
+    rand = random.randint(2, 5)
     print("waiting " + str(rand))
     time.sleep(rand)
     url = f"view-source:https://chapters.dsausa.org/api/search?zip={zip_code}"
@@ -47,7 +47,7 @@ def scrape_zip_code(zip_code, driver, proxy):
 
     # ensure no server error
     i = 0
-    while ("Internal Server Error" in driver.page_source) or ("Rate limit exceeded" in driver.page_source):
+    while ("Internal Server Error" in driver.page_source) or ("Rate limit exceeded" in driver.page_source) or ("502: Bad gateway" in driver.page_source):
         rand = random.randint(2, 5)
         i += rand
         print("stalled for " + str(i))
@@ -63,7 +63,7 @@ def scrape_zip_code(zip_code, driver, proxy):
         print(proxy_url)
         driver.get(url)
         content = driver.page_source
-        if i > 300:
+        if i > 600:
             print("timed out!")
             driver.quit()
             print("scraped and written!")
@@ -88,9 +88,7 @@ with open("proxy_list.csv", "r", encoding="utf-8") as proxy_csv:
         proxy_list.append(row)
 
 # my laziness knows no bounds
-zip_codes = [ str(i).zfill(5) for i in range(1000, 99951) ]
-zip_codes.append("00501")
-zip_codes.append("00544")
+zip_codes = [ str(i).zfill(5) for i in range(00501, 99951) ]
 
 # webdriver
 driver = webdriver.Chrome()

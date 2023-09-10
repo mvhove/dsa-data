@@ -21,7 +21,7 @@
   <crs>
     <spatialrefsys nativeFormat="Wkt">
       <wkt></wkt>
-      <proj4></proj4>
+      <proj4>+proj=longlat +datum=NAD83 +no_defs</proj4>
       <srsid>0</srsid>
       <srid>0</srid>
       <authid></authid>
@@ -32,7 +32,7 @@
     </spatialrefsys>
   </crs>
   <extent>
-    <spatial maxx="0" maxy="0" dimensions="2" crs="" minx="0" miny="0" maxz="0" minz="0"/>
+    <spatial dimensions="2" crs="" minx="0" maxy="0" maxx="0" miny="0" minz="0" maxz="0"/>
     <temporal>
       <period>
         <start></start>
