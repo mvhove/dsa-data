@@ -4,14 +4,12 @@ import os
 import random
 import time
 
-import pandas as pd
-import zipcodes
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import DesiredCapabilities
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 from selenium.webdriver.common.by import By
+import zipcodes
 
 # maeve andersen
 # 27 august 2023
