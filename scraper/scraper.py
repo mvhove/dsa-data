@@ -89,7 +89,7 @@ with open("proxy_list.csv", "r", encoding="utf-8") as proxy_csv:
         proxy_list.append(row)
 
 # scan possible zip codes for validity before checking their chapter assignment
-zip_codes = [ valid_zip for i in range(501, 99951) if zipcodes.is_real(valid_zip := str(i).zfill(5)) ]
+ZIP_CODES = [zip_data["zip_code"] for zip_data in zipcodes.list_all()]
 
 # initialize webdriver
 driver = webdriver.Chrome()
@@ -101,7 +101,7 @@ with open("chapter_zips.csv", "w", newline="") as csvfile:
     
     writer.writeheader()
 
-    for zip_code in zip_codes:
+    for zip_code in ZIP_CODES:
         print(zip_code)
         proxy = get_random_proxy(proxy_list)
         zip_code, chapter_name = scrape_zip_code(zip_code, driver, proxy)
