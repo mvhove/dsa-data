@@ -88,7 +88,7 @@ with open("proxy_list.csv", "r", encoding="utf-8") as proxy_csv:
     for row in reader:
         proxy_list.append(row)
 
-# scan possible zip codes for validity before checking their chapter assignment
+# assemble list of zip codes to scrape
 ZIP_CODES = [zip_data["zip_code"] for zip_data in zipcodes.list_all()]
 
 # initialize webdriver
