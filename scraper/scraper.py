@@ -1,14 +1,15 @@
 import csv
+import json
+import os
+import random
 import time
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import DesiredCapabilities
 from selenium.webdriver.common.proxy import Proxy, ProxyType
-import pandas as pd
 from selenium.webdriver.common.by import By
-import json
-import random
-import os
+import zipcodes
 
 # maeve andersen
 # 27 august 2023
@@ -87,10 +88,10 @@ with open("proxy_list.csv", "r", encoding="utf-8") as proxy_csv:
     for row in reader:
         proxy_list.append(row)
 
-# my laziness knows no bounds
-zip_codes = [ str(i).zfill(5) for i in range(00501, 99951) ]
+# assemble list of zip codes to scrape
+ZIP_CODES = [zip_data["zip_code"] for zip_data in zipcodes.list_all()]
 
-# webdriver
+# initialize webdriver
 driver = webdriver.Chrome()
 
 # create the .csv
@@ -100,7 +101,7 @@ with open("chapter_zips.csv", "w", newline="") as csvfile:
     
     writer.writeheader()
 
-    for zip_code in zip_codes:
+    for zip_code in ZIP_CODES:
         print(zip_code)
         proxy = get_random_proxy(proxy_list)
         zip_code, chapter_name = scrape_zip_code(zip_code, driver, proxy)
