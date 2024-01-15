@@ -25,6 +25,10 @@ import os
 # this will take several days to scrape depending on RNG, i suggest running it
 # on an always-up server or VM.
 
+zips_elapsed = 0
+zips_tot = 44073
+start_time = time.time()
+
 def get_random_proxy(proxy_list):
     return random.choice(proxy_list)
 
@@ -38,7 +42,7 @@ def scrape_zip_code(zip_code, driver, proxy):
     }
     print(proxy_url)
     # this sucks but prevents overload
-    rand = random.randint(2, 5)
+    rand = random.randint(1, 3)
     print("waiting " + str(rand))
     time.sleep(rand)
     url = f"view-source:https://chapters.dsausa.org/api/search?zip={zip_code}"
@@ -87,11 +91,13 @@ with open("proxy_list.csv", "r", encoding="utf-8") as proxy_csv:
     for row in reader:
         proxy_list.append(row)
 
-# my laziness knows no bounds
-zip_codes = [ str(i).zfill(5) for i in range(00501, 99951) ]
+# take zips from usps excel for efficiency
+df = pd.read_excel("ZIP_Locale_Detail_0.xls")
+zip_codes = df[ "DELIVERY ZIPCODE" ].astype(str).str.zfill(5)
 
 # webdriver
 driver = webdriver.Chrome()
+
 
 # create the .csv
 with open("chapter_zips.csv", "w", newline="") as csvfile:
@@ -109,6 +115,16 @@ with open("chapter_zips.csv", "w", newline="") as csvfile:
             print(chapter_name)
         else:
             print("not written!")
+        zips_elapsed += 1
+        days, remainder = divmod(round(time.time() - start_time), 86400)
+        hours, remainder = divmod(remainder, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        print(f"Elapsed: {days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
+        # oh no! repeating code? this is my script, i get to use bad practice!
+        days, remainder = divmod(round((time.time() - start_time) / zips_elapsed * (zips_tot - zips_elapsed)), 86400)
+        hours, remainder = divmod(remainder, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        print(f"Estimated remaining: {days} days, {hours} hours, {minutes} minutes, {seconds} seconds")
 
 driver.quit()
 
