@@ -26,7 +26,7 @@ import os
 # on an always-up server or VM.
 
 zips_elapsed = 0
-zips_tot = 503
+zips_tot = 44073
 start_time = time.time()
 
 def get_random_proxy(proxy_list):
