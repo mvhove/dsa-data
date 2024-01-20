@@ -26,7 +26,7 @@ import os
 # on an always-up server or VM.
 
 zips_elapsed = 0
-zips_tot = 44073
+zips_tot = 503
 start_time = time.time()
 
 def get_random_proxy(proxy_list):
@@ -42,7 +42,7 @@ def scrape_zip_code(zip_code, driver, proxy):
     }
     print(proxy_url)
     # this sucks but prevents overload
-    rand = random.randint(1, 3)
+    rand = random.randint(2, 5)
     print("waiting " + str(rand))
     time.sleep(rand)
     url = f"view-source:https://chapters.dsausa.org/api/search?zip={zip_code}"
@@ -50,12 +50,16 @@ def scrape_zip_code(zip_code, driver, proxy):
     content = driver.page_source
 
     # ensure no server error
-    i = 0
+    i = 1
+    j = 0
     while ("Internal Server Error" in driver.page_source) or ("Rate limit exceeded" in driver.page_source) or ("502: Bad gateway" in driver.page_source):
         rand = random.randint(2, 5)
         i += rand
-        print("stalled for " + str(i))
-        time.sleep(rand)
+        if i > 1800:
+          i = 1800
+        j += i
+        print("stalled for " + str(j))
+        time.sleep(i)
         proxy = get_random_proxy(proxy_list)
         proxy_url = f"http://{proxy['host']}:{proxy['port']}"
         webdriver.DesiredCapabilities.CHROME['proxy'] = {
@@ -67,11 +71,6 @@ def scrape_zip_code(zip_code, driver, proxy):
         print(proxy_url)
         driver.get(url)
         content = driver.page_source
-        if i > 600:
-            print("timed out!")
-            driver.quit()
-            print("scraped and written!")
-            exit()
     
     content = driver.find_element(By.CLASS_NAME, "line-content").text
 
